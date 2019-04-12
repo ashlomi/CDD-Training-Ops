@@ -1,0 +1,225 @@
+{
+	"objects": [
+		{
+			"application": "Local|Training App",
+			"name": "${AppVersion}",
+			"kind": "ApplicationVersion"
+		},
+		{
+			"ownerParties": [
+				"ashlomitest@gmail.com"
+			],
+			"applicationVersions": [
+				"Local|Training App/${AppVersion}"
+			],
+			"runOnCreation": false,
+			"version": "${ReleaseVersion}",
+			"name": "Taining Delivery",
+			"kind": "Release"
+		},
+		{
+			"release": "Taining Delivery/${ReleaseVersion}",
+			"scope": "RELEASE_SCOPE",
+			"value": "",
+			"name": "buildNumber",
+			"kind": "ReleaseToken"
+		},
+		{
+			"release": "Taining Delivery/${ReleaseVersion}",
+			"scope": "PHASE_SCOPE",
+			"value": "",
+			"name": "JenkinsProjectName",
+			"kind": "ReleaseToken"
+		},
+		{
+			"release": "Taining Delivery/${ReleaseVersion}",
+			"environments": [
+				"UAT"
+			],
+			"approvalGate": "MANUAL",
+			"skipTasksWithUnchangedApplications": false,
+			"isApprovalRequired": false,
+			"name": "UAT",
+			"kind": "Phase"
+		},
+		{
+			"release": "Taining Delivery/${ReleaseVersion}",
+			"environments": [
+				"SIT"
+			],
+			"approvalGate": "MANUAL",
+			"previousPhase": "UAT",
+			"skipTasksWithUnchangedApplications": false,
+			"isApprovalRequired": false,
+			"name": "SIT",
+			"kind": "Phase"
+		},
+		{
+			"release": "Taining Delivery/${ReleaseVersion}",
+			"environments": [
+				"Production"
+			],
+			"approvalGate": "MANUAL",
+			"previousPhase": "SIT",
+			"skipTasksWithUnchangedApplications": false,
+			"isApprovalRequired": false,
+			"name": "Production",
+			"kind": "Phase"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/UAT",
+			"isDisabled": false,
+			"name": "Run Jenkins Build",
+			"kind": "Task",
+			"endpoint": "Jenkins",
+			"plugin": "Jenkins/1.0.3",
+			"parameters": {
+				"project name": "%JenkinsProjectName%",
+				"taskExpirationTime": "43200",
+				"build_number": "%buildNumber%"
+			},
+			"type": "Run Build"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/UAT",
+			"previousTasks": [
+				"Run Jenkins Build"
+			],
+			"isDisabled": false,
+			"name": "Run Deployment",
+			"kind": "Task",
+			"endpoint": "ra",
+			"plugin": "Release Automation/5.5.2",
+			"parameters": {
+				"environment": "UAT",
+				"application": "Application name",
+				"deploymentPlan": "Deployment Plan Name",
+				"build": "%buildNumber%",
+				"project": "Project Name"
+			},
+			"type": "Run Deployment"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/UAT",
+			"applicationVersions": [
+				"Local|Training App/${AppVersion}"
+			],
+			"previousTasks": [
+				"Run Deployment"
+			],
+			"isDisabled": false,
+			"name": "Run Tests",
+			"kind": "Task"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/UAT",
+			"previousTasks": [
+				"Run Tests"
+			],
+			"isDisabled": false,
+			"name": "Send Slack Message",
+			"kind": "Task"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/UAT",
+			"previousTasks": [
+				"Send Slack Message"
+			],
+			"isDisabled": false,
+			"name": "Send Email",
+			"kind": "Task"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/SIT",
+			"isDisabled": false,
+			"name": "Run Deployment",
+			"kind": "Task",
+			"endpoint": "ra",
+			"plugin": "Release Automation/5.5.2",
+			"parameters": {
+				"environment": "SIT",
+				"application": "Appp1",
+				"deploymentPlan": "Plan1",
+				"build": "%Training App.last_successful_change%",
+				"project": "Proj1"
+			},
+			"type": "Run Deployment"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/SIT",
+			"previousTasks": [
+				"Run Deployment"
+			],
+			"isDisabled": false,
+			"name": "Run Tests",
+			"kind": "Task"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/SIT",
+			"previousTasks": [
+				"Run Tests"
+			],
+			"isDisabled": false,
+			"name": "Update Systems",
+			"kind": "Task"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/SIT",
+			"applicationVersions": [
+				"Local|Training App/${AppVersion}"
+			],
+			"previousTasks": [
+				"Update Systems"
+			],
+			"isDisabled": false,
+			"name": "Send Salck Message",
+			"kind": "Task"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/Production",
+			"isDisabled": false,
+			"name": "Run Deployment",
+			"kind": "Task",
+			"endpoint": "ra",
+			"plugin": "Release Automation/5.5.2",
+			"parameters": {
+				"environment": "SIT",
+				"application": "Appp1",
+				"deploymentPlan": "Plan1",
+				"build": "%Training App.last_successful_change%",
+				"project": "Proj1"
+			},
+			"type": "Run Deployment"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/Production",
+			"previousTasks": [
+				"Run Deployment"
+			],
+			"isDisabled": false,
+			"name": "Run Tests",
+			"kind": "Task"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/Production",
+			"previousTasks": [
+				"Run Tests"
+			],
+			"isDisabled": false,
+			"name": "Update Systems",
+			"kind": "Task"
+		},
+		{
+			"phase": "Taining Delivery/${ReleaseVersion}/Production",
+			"applicationVersions": [
+				"Local|Training App/${AppVersion}"
+			],
+			"previousTasks": [
+				"Update Systems"
+			],
+			"isDisabled": false,
+			"name": "Send Salck Message",
+			"kind": "Task"
+		}
+	]
+}
