@@ -1,4 +1,19 @@
 {
+	"parameters": [
+		{
+			"name": "ReleaseVersion",
+			"value": "FB3354"
+		},
+		{
+			"name": "AppVersion",
+			"value": "V12.40"
+		},
+		
+		{
+			"name": "ReleaseName",
+			"value": "Banking-FY19Q3"
+		}
+	],
 	"objects": [
 		{
 			"application": "Local|Training App",
